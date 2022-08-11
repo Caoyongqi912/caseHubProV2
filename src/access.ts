@@ -1,6 +1,7 @@
-export default function (initialState: API.IUser) {
+export default function (initialState: { currentUser: API.IUser } | undefined) {
+  const { currentUser } = initialState ?? {};
+  console.log('=====isAdmin', currentUser?.isAdmin);
   return {
-    isAdmin: initialState?.isAdmin,
-    isRoot: () => true
-  }
+    isAdmin: currentUser && currentUser.isAdmin,
+  };
 }

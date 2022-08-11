@@ -1,20 +1,19 @@
 declare namespace API {
   interface IResponse {
-    code: number
-    data?: any
-    msg: string
+    code: number;
+    data?: any;
+    msg: string;
   }
 
   interface IUser {
-    id: number
-    username: string
-    isAdmin: boolean
+    id: number;
+    username: string;
+    isAdmin: boolean;
+    avatar?: string;
   }
 
   interface ILoginParams {
-    username: string
-    password: string
+    username: string;
+    password: string;
   }
-
-
 }

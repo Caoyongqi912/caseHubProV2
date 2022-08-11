@@ -1,16 +1,40 @@
 export default [
-  {path: '/login', layouts: false, exact: true, component: '@/pages/User/Login'},
-  {path: '/', component: '@/pages/index'},
+  {
+    path: '/login',
+    exact: true,
+    component: '@/pages/User/Login',
+    layout: false,
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    icon: 'home',
+    component: '@/pages/index',
+  },
   {
     path: '/',
-    component: '@/layouts/index',
-    name: "User",
-    icon: "dashboard",
+    redirect: '/home',
+  },
+  {
+    path: '/user',
+    name: 'User',
+    icon: 'user',
     routes: [
-      {path: '/admin', name: 'admin', component: '@/pages/User/Admin/index'},//access: "isAdmin",
-      {path: '/editor', name: 'editor', component: '@/pages/User/Editor/index'}
-
-    ]
-  }
-
-]
+      {
+        path: '/user/admin',
+        name: 'admin',
+        access: 'isAdmin',
+        component: '@/pages/User/Admin',
+      }, //access: "isAdmin",
+      {
+        path: '/user/editor',
+        name: 'editor',
+        component: '@/pages/User/Editor',
+      },
+      { component: '@/pages/404' },
+    ],
+  },
+  {
+    component: '@/pages/404',
+  },
+];

@@ -1,7 +1,10 @@
-import {request} from "umi";
+import { request } from 'umi';
 
 /** 登录接口 POST /user/login */
-export async function login(body: API.ILoginParams, options?: { [key: string]: any }) {
+export async function login(
+  body: API.ILoginParams,
+  options?: { [key: string]: any },
+) {
   return request<API.IResponse>('/api/user/login', {
     method: 'POST',
     headers: {
@@ -12,8 +15,7 @@ export async function login(body: API.ILoginParams, options?: { [key: string]: a
   });
 }
 
-
-/** 获取当前的用户 GET /user/info */
+/** 获取当前的用户 GET /user/current */
 export async function currentUser(options?: { [key: string]: any }) {
   return request<{ data: API.IUser }>('/api/user/current', {
     method: 'GET',

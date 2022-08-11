@@ -1,63 +1,62 @@
-import {RequestConfig} from "umi";
-import {getToken} from "@/utils/token";
-import {history} from 'umi';
-import {currentUser} from "@/api/user";
-// @ts-ignore
-import defaultSettings from '../config/defaultSettings';
-import {PageLoading, SettingDrawer} from '@ant-design/pro-components';
-import {RunTimeLayoutConfig} from "umi";
-import {BasicLayoutProps, Settings as LayoutSettings} from '@ant-design/pro-layout';
+import { history } from 'umi';
+import { currentUser } from '@/api/user';
+import { PageLoading } from '@ant-design/pro-components';
+import { RunTimeLayoutConfig } from 'umi';
+import RightContent from '@/components/RightContent';
+import { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { RequestConfig } from '@@/plugin-request/request';
+import { getToken } from '@/utils/token';
 
 const loginPath = '/login';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
-  loading: <PageLoading/>,
+  loading: <PageLoading />,
 };
 
-
 export async function getInitialState(): Promise<{
-  currentUser?: API.IUser
-  loading?: boolean
+  currentUser?: API.IUser;
+  loading?: boolean;
   fetchUserInfo?: () => Promise<API.IUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
       const res = await currentUser();
-      return res.data
+      return res.data;
     } catch (error) {
-      history.push(loginPath)
+      history.push(loginPath);
     }
-    return undefined
-  }
+    return undefined;
+  };
   // 如果不是登录页面，执行
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
       currentUser,
-      // settings: defaultSettings,
-
     };
   }
   return {
     fetchUserInfo,
-    // setting:defaultSettings
-  }
+  };
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => {
+export const layout: RunTimeLayoutConfig = ({
+  initialState,
+  setInitialState,
+}) => {
+  console.log('==user==', initialState?.currentUser?.username);
   return {
-    // rightContentRender: () => <RightContent/>,
+    rightContentRender: () => <RightContent />,
     disableContentMargin: false,
+    //水印
     waterMarkProps: {
       content: initialState?.currentUser?.username,
     },
-    // footerRender: () => <Footer/>,
     onPageChange: () => {
-      const {location} = history;
-      console.log(location.pathname);
+      const { location } = history;
+      console.log('===onPageChange===', location.pathname);
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
@@ -65,35 +64,34 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
     },
     // 自定义 403 页面
     unAccessible: <div>unAccessible</div>,
-    childrenRender: (children,props) => {
+    childrenRender: (children, props) => {
       if (initialState?.loading) return <PageLoading />;
-
-      return <div>{children}</div>;
+      return <>{children}</>;
     },
+    ...initialState,
   };
 };
 
-
 const authHeaderInterceptor = (url: string, options: RequestConfig) => {
-  const token = getToken()
+  const token = getToken();
   if (token !== null) {
-    const authHeader = {Authorization: 'Basic ' + btoa(token + ':' + '')};
+    const authHeader = { Authorization: 'Basic ' + btoa(token + ':' + '') };
     return {
       url: `${url}`,
-      options: {...options, interceptors: true, headers: authHeader},
+      options: { ...options, interceptors: true, headers: authHeader },
     };
   }
   return {
     url: `${url}`,
-    options: {...options, interceptors: true},
+    options: { ...options, interceptors: true },
   };
 };
 
-const demoResponseInterceptors = (response: Response, options: RequestConfig) => {
+const responseInterceptors = (response: Response, options: RequestConfig) => {
   return response;
 };
 
 export const request: RequestConfig = {
   requestInterceptors: [authHeaderInterceptor],
-  responseInterceptors: [demoResponseInterceptors],
+  responseInterceptors: [responseInterceptors],
 };
