@@ -30,11 +30,11 @@ export default () => {
       cardBordered
       // @ts-ignore
       request={({ pageSize, current }, sort, filter) => {
-        return getProjectPage({ params: { pageSize, current }, sort, filter });
+        return getProjectPage({ pageSize, current, sort, filter });
       }}
       editable={{
         //可编辑表格的相关配置
-        type: 'multiple', //https://procomponents.ant.design/components/editable-table#editable-%E7%BC%96%E8%BE%91%E8%A1%8C%E9%85%8D%E7%BD%AE
+        type: 'multiple',
       }}
       columnsState={{
         persistenceKey: 'pro-table-singe-demos',
@@ -46,6 +46,7 @@ export default () => {
       rowKey="id"
       search={{
         labelWidth: 'auto',
+        span: 6,
       }}
       options={{
         setting: {
@@ -56,6 +57,7 @@ export default () => {
       form={{
         // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
         syncToUrl: (values, type) => {
+          console.log('======' + values);
           if (type === 'get') {
             return {
               ...values,
@@ -67,7 +69,10 @@ export default () => {
       }}
       pagination={{
         pageSize: 10,
-        onChange: (page) => console.log(page),
+        // onChange: (page) => console.log(page)
+      }}
+      onSubmit={(params) => {
+        console.log('submit', params);
       }}
       dateFormatter="string"
       headerTitle="Project List"

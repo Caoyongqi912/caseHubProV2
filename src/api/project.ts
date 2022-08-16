@@ -2,21 +2,20 @@ import { request } from '@@/plugin-request/request';
 
 /** 登录接口 POST /user/login */
 export async function pageProject(
-  page: API.IPageProject,
+  params: API.IPageProject,
   options?: { [key: string]: any },
 ) {
-  console.log(page);
-
-  const pages = {
-    limit: page.params.pageSize,
-    page: page.params.current,
-    // by: page.sort
-    // filter: page.filter
+  console.log(params);
+  const p = {
+    pageSize: params.pageSize,
+    current: params.current,
+    sort: Object.keys(params.sort)[0] || null,
+    filter: params.filter,
   };
-  console.log(pages);
-  return request<API.IResponse>('/api/project/opt', {
+  console.log('p', p);
+  return request<API.IPageResponse>('/api/project/opt', {
     method: 'GET',
-    params: pages,
+    params: p,
     ...(options || {}),
   });
 }

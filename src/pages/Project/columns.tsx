@@ -4,13 +4,15 @@ const columns: ProColumns[] = [
   {
     title: 'id',
     dataIndex: 'id',
-    valueType: 'indexBorder',
     width: 50,
+    editable: false,
+    hideInSearch: true,
   },
   {
     title: 'uid',
     dataIndex: 'uid',
-    ellipsis: true,
+    ellipsis: false,
+    editable: false,
   },
   {
     title: 'title',
@@ -36,6 +38,7 @@ const columns: ProColumns[] = [
     title: 'admin',
     dataIndex: 'adminID',
     ellipsis: true,
+    editable: false,
   },
   {
     title: '创建时间',
@@ -44,6 +47,16 @@ const columns: ProColumns[] = [
     valueType: 'dateTime',
     sorter: true,
     hideInSearch: true,
+    editable: false,
+  },
+  {
+    title: '更新时间',
+    key: 'showTime',
+    dataIndex: 'update_time',
+    valueType: 'dateTime',
+    sorter: true,
+    hideInSearch: true,
+    editable: false,
   },
   {
     title: '操作',

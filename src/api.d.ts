@@ -30,20 +30,21 @@ declare namespace API {
     password: string;
   }
 
-  interface IPage {
+  interface IPageProject {
     pageSize: number | undefined;
     current: number | undefined;
-  }
-
-  interface IPageProject {
-    params: IPage;
     sort?: any;
     filter?: any;
   }
 
+  interface IPageData {
+    items: IProject[];
+    pageInfo: { limit: number; page: number; pages: number; total: number };
+  }
+
   interface IPageResponse {
     code: number;
-    data: any;
+    data: IPageData;
     msg: string;
   }
 }
