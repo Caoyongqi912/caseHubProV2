@@ -1,104 +1,87 @@
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from '@ant-design/icons';
 import {
-  ModalForm, ProFieldRequestData,
-  ProForm,
+  ModalForm,
   ProFormSelect,
-  ProFormText
-} from "@ant-design/pro-components";
-import { Button, message } from "antd";
-import React from "react";
-import { queryUser } from "@/api/user";
-
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
-
+  ProFormText,
+} from '@ant-design/pro-components';
+import { Button, message } from 'antd';
+import React from 'react';
+import { newProject } from '@/api/project';
+import { currentUser, searchUser } from '@/api/user';
 
 const Index: React.FC = () => {
-
-  const queryUserList = async () => {
-    const response = await queryUser()
-      .then((res) => {
-        console.log(res);
-        let r: ProFieldRequestData<any> = [];
-        res.data.map(item => {
-          let temp = {};
-          temp["lable"] = item.id;
-          temp["value"] = item.username;
-          r.push(temp);
-        });
-        return r;
-      }).catch((error) => console.log(error));
-    return Promise.resolve(response);
-  };
-
   return (
     <ModalForm<{
       name: string;
-      company: string;
+      desc: string;
+      adminID: number;
     }>
       title="新建项目"
       trigger={
         <Button type="primary">
           <PlusOutlined />
-          新建表单
+          新建项目
         </Button>
       }
       autoFocusFirstInput
       modalProps={{
-        onCancel: () => console.log("run")
+        onCancel: () => console.log('run'),
       }}
-      submitTimeout={2000}
       onFinish={async (values) => {
-        await waitTime(2000);
-        console.log(values.name);
-        message.success("提交成功");
-        return true;
+        message.success('提交成功');
+        console.log(values);
+        try {
+          const res = await newProject(values);
+          console.log(res);
+          if (res.code == 0) {
+            message.success(res.msg);
+            return true;
+          } else {
+            message.error(res.msg);
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }}
     >
-      <ProForm.Group>
-        <ProFormText
-          width="md"
-          name="name"
-          label="项目名称"
-          tooltip="最长为 20 位"
-          placeholder="请输入名称"
-        />
-        <ProFormText
-          width="md"
-          name="name"
-          label="项目描述"
-          tooltip="最长为 100 位"
-          placeholder="请输入名称"
-        />
-
-      </ProForm.Group>
-
-      <ProForm.Group>
-        <ProFormSelect
-          showSearch
-          request={() => queryUserList()}
-          fieldProps={{
-            autoClearSearchValue: true,//选中后清空搜索框
-            //使用onChange onBlur
-            onChange: (value) => {
-              return value;
-            }
-          }}//必须要return一个值出去 表单项才会展示值在输入框上
-          width="xs"
-          name="useMode"
-          label="负责人"
-          colProps={{ span: 8 }}
-        />
-
-      </ProForm.Group>
+      <ProFormText
+        name="name"
+        label="项目名称"
+        placeholder="input your project name"
+        required={true}
+      />
+      <ProFormText
+        name="desc"
+        label="项目描述"
+        placeholder="input your project desc"
+      />
+      <ProFormSelect
+        showSearch
+        name="adminID"
+        label="项目负责人"
+        placeholder="input your admin name to search"
+        rules={[{ required: true, message: 'Please select !' }]}
+        debounceTime={2000}
+        request={async (params) => {
+          let res: any[] = [];
+          const searchData: API.IMoHuSearchUser = {
+            target: 'username',
+            value: params.keyWords,
+          };
+          const { data }: any[] = await searchUser(searchData);
+          console.log('+++', data);
+          data.map((item: any) => {
+            let r = {};
+            r['label'] = item.username;
+            r['value'] = item.id;
+            res.push(r);
+          });
+          return res;
+        }}
+      />
     </ModalForm>
   );
 };
 
 export default Index;
-

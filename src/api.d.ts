@@ -5,7 +5,6 @@ declare namespace API {
     msg: string;
   }
 
-
   interface IUser {
     id: number;
     uid: string;
@@ -15,6 +14,11 @@ declare namespace API {
     gender?: string;
     tag?: string;
     departmentID?: number;
+  }
+
+  interface IMoHuSearchUser {
+    target: string;
+    value: string;
   }
 
   interface IProject {
@@ -37,6 +41,12 @@ declare namespace API {
     current: number | undefined;
     sort?: any;
     filter?: any;
+  }
+
+  interface INewProject {
+    name: string;
+    desc: string | null;
+    adminID: number;
   }
 
   interface IPageData {
