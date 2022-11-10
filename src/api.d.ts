@@ -5,13 +5,15 @@ declare namespace API {
     msg: string;
   }
 
+
   interface IUser {
     id: number;
+    uid: string;
     username: string;
-    isAdmin: boolean;
+    isAdmin?: boolean;
     avatar?: string;
-    gender: 1 | 0;
-    tag: 0 | 1 | 2 | 3;
+    gender?: string;
+    tag?: string;
     departmentID?: number;
   }
 
