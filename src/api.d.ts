@@ -15,6 +15,11 @@ declare namespace API {
     departmentID?: number;
   }
 
+  interface IMoHuSearchUser {
+    target: string;
+    value: string;
+  }
+
   interface IProject {
     adminID: number;
     create_time: string;
@@ -35,6 +40,12 @@ declare namespace API {
     current: number | undefined;
     sort?: any;
     filter?: any;
+  }
+
+  interface INewProject {
+    name: string;
+    desc: string | null;
+    adminID: number;
   }
 
   interface IPageData {

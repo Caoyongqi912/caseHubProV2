@@ -22,3 +22,15 @@ export async function currentUser(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+/** 模糊搜索用户 GET /users */
+export async function searchUser(
+  body: API.IMoHuSearchUser,
+  options?: { [key: string]: any },
+) {
+  return request<{ data: API.IPageResponse }>('/api/user/search', {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}

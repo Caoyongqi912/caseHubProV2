@@ -1,94 +1,87 @@
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from '@ant-design/icons';
 import {
   ModalForm,
-  ProForm,
-  ProFormDateRangePicker,
   ProFormSelect,
-  ProFormText
-} from "@ant-design/pro-components";
-import { Button, message } from "antd";
-import React from "react";
-
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
-
-
+  ProFormText,
+} from '@ant-design/pro-components';
+import { Button, message } from 'antd';
+import React from 'react';
+import { newProject } from '@/api/project';
+import { currentUser, searchUser } from '@/api/user';
 
 const Index: React.FC = () => {
   return (
     <ModalForm<{
       name: string;
-      company: string;
+      desc: string;
+      adminID: number;
     }>
-      title="新建表单"
+      title="新建项目"
       trigger={
         <Button type="primary">
           <PlusOutlined />
-          新建表单
+          新建项目
         </Button>
       }
       autoFocusFirstInput
       modalProps={{
-        onCancel: () => console.log("run")
+        onCancel: () => console.log('run'),
       }}
-      submitTimeout={2000}
       onFinish={async (values) => {
-        await waitTime(2000);
-        console.log(values.name);
-        message.success("提交成功");
-        return true;
+        message.success('提交成功');
+        console.log(values);
+        try {
+          const res = await newProject(values);
+          console.log(res);
+          if (res.code == 0) {
+            message.success(res.msg);
+            return true;
+          } else {
+            message.error(res.msg);
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }}
     >
-      <ProForm.Group>
-        <ProFormText
-          width="md"
-          name="name"
-          label="签约客户名称"
-          tooltip="最长为 24 位"
-          placeholder="请输入名称"
-        />
-
-        <ProFormText width="md" name="company" label="我方公司名称" placeholder="请输入名称" />
-      </ProForm.Group>
-      <ProForm.Group>
-        <ProFormText width="md" name="contract" label="合同名称" placeholder="请输入名称" />
-        <ProFormDateRangePicker name="contractTime" label="合同生效时间" />
-      </ProForm.Group>
-      <ProForm.Group>
-        <ProFormSelect
-          request={async () => [
-            {
-              value: "chapter",
-              label: "盖章后生效"
-            }
-          ]}
-          width="xs"
-          name="useMode"
-          label="合同约定生效方式"
-        />
-        <ProFormSelect
-          width="xs"
-          options={[
-            {
-              value: "time",
-              label: "履行完终止"
-            }
-          ]}
-          name="unusedMode"
-          label="合同约定失效效方式"
-        />
-      </ProForm.Group>
-      <ProFormText width="sm" name="id" label="主合同编号" />
-      <ProFormText name="project" disabled label="项目名称" initialValue="xxxx项目" />
-      <ProFormText width="xs" name="mangerName" disabled label="商务经理" initialValue="启途" />
+      <ProFormText
+        name="name"
+        label="项目名称"
+        placeholder="input your project name"
+        required={true}
+      />
+      <ProFormText
+        name="desc"
+        label="项目描述"
+        placeholder="input your project desc"
+      />
+      <ProFormSelect
+        showSearch
+        name="adminID"
+        label="项目负责人"
+        placeholder="input your admin name to search"
+        rules={[{ required: true, message: 'Please select !' }]}
+        debounceTime={2000}
+        request={async (params) => {
+          let res: any[] = [];
+          const searchData: API.IMoHuSearchUser = {
+            target: 'username',
+            value: params.keyWords,
+          };
+          const { data }: any[] = await searchUser(searchData);
+          console.log('+++', data);
+          data.map((item: any) => {
+            let r = {};
+            r['label'] = item.username;
+            r['value'] = item.id;
+            res.push(r);
+          });
+          return res;
+        }}
+      />
     </ModalForm>
   );
 };
 
 export default Index;
-
