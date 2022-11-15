@@ -7,9 +7,19 @@ import {
 import { Button, message } from 'antd';
 import React from 'react';
 import { newProject } from '@/api/project';
-import { currentUser, searchUser } from '@/api/user';
+import { searchUser } from '@/api/user';
 
-const Index: React.FC = () => {
+interface SearchUser {
+  value: number;
+  label: string;
+}
+
+interface selfProps {
+  reload: Function | undefined;
+}
+
+const Index: React.FC<selfProps> = (props) => {
+  let { reload } = props;
   return (
     <ModalForm<{
       name: string;
@@ -24,20 +34,20 @@ const Index: React.FC = () => {
         </Button>
       }
       autoFocusFirstInput
+      // 关闭执录入执行
       modalProps={{
-        onCancel: () => console.log('run'),
+        onCancel: () => console.log('close'),
       }}
       onFinish={async (values) => {
-        message.success('提交成功');
-        console.log(values);
         try {
           const res = await newProject(values);
-          console.log(res);
           if (res.code == 0) {
             message.success(res.msg);
+            reload!(true);
             return true;
           } else {
             message.error(res.msg);
+            console.log(res);
             return false;
           }
         } catch (e) {
@@ -64,18 +74,18 @@ const Index: React.FC = () => {
         rules={[{ required: true, message: 'Please select !' }]}
         debounceTime={2000}
         request={async (params) => {
-          let res: any[] = [];
+          let res: SearchUser[] = [];
           const searchData: API.IMoHuSearchUser = {
             target: 'username',
             value: params.keyWords,
           };
-          const { data }: any[] = await searchUser(searchData);
-          console.log('+++', data);
-          data.map((item: any) => {
-            let r = {};
-            r['label'] = item.username;
-            r['value'] = item.id;
-            res.push(r);
+          let { data } = await searchUser(searchData);
+          data.map((item: API.IUser) => {
+            let users: SearchUser = {
+              label: item.username,
+              value: item.id,
+            };
+            res.push(users);
           });
           return res;
         }}

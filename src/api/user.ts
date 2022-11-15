@@ -23,32 +23,12 @@ export async function currentUser(options?: { [key: string]: any }) {
   });
 }
 
-interface IUser {
-  id: number;
-  username: string;
-  uid: string;
-}
-
-interface IQueryUser {
-  code: number;
-  data: Array<IUser>;
-  msg: string;
-}
-
-/** 获取当前的用户 GET /user/query */
-export async function queryUser(options?: { [key: string]: any }) {
-  return request<{ data: IQueryUser }>('/api/user/opt', {
-    method: 'GET',
-    ...(options || {}),
-  });
-}
-
 /** 模糊搜索用户 GET /users */
 export async function searchUser(
   body: API.IMoHuSearchUser,
   options?: { [key: string]: any },
 ) {
-  return request<{ data: API.IPageResponse }>('/api/user/search', {
+  return request<{ data: API.IUser[] }>('/api/user/search', {
     method: 'POST',
     data: body,
     ...(options || {}),

@@ -13,7 +13,7 @@ export async function pageProject(
     sort: Object.keys(params.sort)[0] || null,
     filter: params.filter,
   };
-  return request<API.IPageResponse>(ProjectURL, {
+  return request<API.IResponse>(ProjectURL, {
     method: 'GET',
     params: p,
     ...(options || {}),
@@ -26,7 +26,7 @@ export async function newProject(
   options?: { [key: string]: any },
 ) {
   console.log(data);
-  return request<API.IPageResponse>(ProjectURL, {
+  return request<API.IResponse>(ProjectURL, {
     method: 'POST',
     data: data,
     ...(options || {}),

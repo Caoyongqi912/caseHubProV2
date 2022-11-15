@@ -53,10 +53,4 @@ declare namespace API {
     items: IProject[];
     pageInfo: { limit: number; page: number; pages: number; total: number };
   }
-
-  interface IPageResponse {
-    code: number;
-    data: IPageData;
-    msg: string;
-  }
 }

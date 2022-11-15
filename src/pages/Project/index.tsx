@@ -7,8 +7,14 @@ import columns from '@/pages/Project/columns';
 
 export default () => {
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
+
+  const isReload = (value: boolean) => {
+    console.log(value);
+    if (value) {
+      actionRef.current?.reload();
+    }
+  };
   const getProjectPage = async (values: API.IPageProject) => {
-    console.log(values);
     const response = await pageProject({ ...values })
       .then((res) => {
         return {
@@ -76,7 +82,7 @@ export default () => {
       }}
       dateFormatter="string"
       headerTitle="Project List"
-      toolBarRender={() => [<NewProject />]}
+      toolBarRender={() => [<NewProject reload={isReload} />]}
     />
   );
 };
