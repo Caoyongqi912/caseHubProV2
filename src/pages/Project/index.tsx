@@ -9,7 +9,6 @@ export default () => {
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
 
   const isReload = (value: boolean) => {
-    console.log(value);
     if (value) {
       actionRef.current?.reload();
     }
@@ -36,6 +35,9 @@ export default () => {
       cardBordered
       // @ts-ignore
       request={({ pageSize, current }, sort, filter) => {
+        console.log(pageSize);
+        console.log(sort);
+        console.log(filter);
         return getProjectPage({ pageSize, current, sort, filter });
       }}
       editable={{
@@ -63,8 +65,8 @@ export default () => {
       form={{
         // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
         syncToUrl: (values, type) => {
-          console.log('======' + values);
           if (type === 'get') {
+            console.log(values.uid);
             return {
               ...values,
               created_at: [values.startTime, values.endTime],

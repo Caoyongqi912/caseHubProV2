@@ -24,7 +24,7 @@ const Index: React.FC = () => {
       const res = await login({ ...values });
       if (res.code === 0) {
         message.success('login success');
-        const token = res.data;
+        const { token } = res.data;
         if (token && token != getToken()) {
           setToken(token);
         }
