@@ -7,13 +7,13 @@ import columns from '@/pages/Project/columns';
 
 export default () => {
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
-
   const isReload = (value: boolean) => {
     if (value) {
       actionRef.current?.reload();
     }
   };
-  const getProjectPage = async (values: API.IPageProject) => {
+  const getProjectPage = async (values: API.ISearch) => {
+    console.log(values);
     const response = await pageProject({ ...values })
       .then((res) => {
         return {
@@ -33,13 +33,18 @@ export default () => {
       columns={columns}
       actionRef={actionRef}
       cardBordered
-      // @ts-ignore
-      request={({ pageSize, current }, sort, filter) => {
-        console.log(pageSize);
+      request={(params, sort) => {
+        console.log(params);
         console.log(sort);
-        console.log(filter);
-        return getProjectPage({ pageSize, current, sort, filter });
+        return getProjectPage(params as API.ISearch);
       }}
+      // @ts-ignore
+      // request={({ pageSize, current }, sort, filter) => {
+      //   console.log(pageSize);
+      //   console.log(sort);
+      //   console.log(filter);
+      //   return getProjectPage({ pageSize, current, sort, filter });
+      // }}
       editable={{
         //可编辑表格的相关配置
         type: 'multiple',
@@ -61,19 +66,6 @@ export default () => {
           listsHeight: 400,
         },
         reload: true,
-      }}
-      form={{
-        // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
-        syncToUrl: (values, type) => {
-          if (type === 'get') {
-            console.log(values.uid);
-            return {
-              ...values,
-              created_at: [values.startTime, values.endTime],
-            };
-          }
-          return values;
-        },
       }}
       pagination={{
         pageSize: 10,

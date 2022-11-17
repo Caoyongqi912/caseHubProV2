@@ -13,6 +13,7 @@ const columns: ProColumns[] = [
     dataIndex: 'uid',
     ellipsis: false,
     editable: false,
+    formItemProps: { label: 'uid' },
   },
   {
     title: 'title',
@@ -33,12 +34,14 @@ const columns: ProColumns[] = [
     title: 'desc',
     dataIndex: 'desc',
     ellipsis: true,
+    search: false,
   },
   {
     title: 'admin',
     dataIndex: 'adminID',
     ellipsis: true,
     editable: false,
+    search: false,
   },
   {
     title: '创建时间',

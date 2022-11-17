@@ -29,15 +29,14 @@ const Index: React.FC = () => {
           setToken(token);
         }
         await getCurrentUserInfo();
-        console.log('==========', history);
         if (!history) return;
         const { query } = history.location;
         const { redirect } = query as { redirect: string };
-        console.log('=========', redirect);
         history.push(redirect || '/');
         return;
       }
     } catch (error) {
+      console.log(error);
       message.error('login fail');
     }
   };

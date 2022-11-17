@@ -4,14 +4,13 @@ const ProjectURL: string = '/api/project/opt';
 
 /** 项目 GET /project */
 export async function pageProject(
-  params: API.IPageProject,
+  params: API.ISearch,
   options?: { [key: string]: any },
 ) {
   const p = {
     pageSize: params.pageSize,
     current: params.current,
-    sort: Object.keys(params.sort)[0] || null,
-    filter: params.filter,
+    filter: { uid: params.uid },
   };
   return request<API.IResponse>(ProjectURL, {
     method: 'GET',

@@ -49,6 +49,13 @@ declare namespace API {
     adminID: number;
   }
 
+  interface ISearch {
+    current: number;
+    pageSize: number;
+    uid?: string;
+    name?: string;
+  }
+
   interface IPageData {
     items: IProject[];
     pageInfo: { limit: number; page: number; pages: number; total: number };
