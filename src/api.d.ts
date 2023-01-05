@@ -36,17 +36,11 @@ declare namespace API {
     password: string;
   }
 
-  interface IPageProject {
-    pageSize: number | undefined;
-    current: number | undefined;
-    sort?: any;
-    filter?: any;
-  }
-
-  interface INewProject {
+  interface INewOrUpdateProject {
+    uid?: string;
     name: string;
     desc: string | null;
-    adminID: number;
+    adminID?: number;
   }
 
   interface ISearch {
@@ -54,10 +48,5 @@ declare namespace API {
     pageSize: number;
     uid?: string;
     name?: string;
-  }
-
-  interface IPageData {
-    items: IProject[];
-    pageInfo: { limit: number; page: number; pages: number; total: number };
   }
 }

@@ -2,7 +2,7 @@ import type { ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { useRef } from 'react';
 import NewProject from '@/components/NewProject';
-import { pageProject } from '@/api/project';
+import { pageProject, updateProject } from '@/api/project';
 import columns from '@/pages/Project/columns';
 
 export default () => {
@@ -33,21 +33,25 @@ export default () => {
       columns={columns}
       actionRef={actionRef}
       cardBordered
-      request={(params, sort) => {
-        console.log(params);
-        console.log(sort);
-        return getProjectPage(params as API.ISearch);
-      }}
       // @ts-ignore
-      // request={({ pageSize, current }, sort, filter) => {
-      //   console.log(pageSize);
-      //   console.log(sort);
-      //   console.log(filter);
-      //   return getProjectPage({ pageSize, current, sort, filter });
-      // }}
+      request={(params: API.ISearch, sort) => {
+        return getProjectPage(params);
+      }}
       editable={{
         //可编辑表格的相关配置
         type: 'multiple',
+        onSave: async (key, record: API.IProject, originRow, newLineConfig) => {
+          const form = {
+            uid: record.uid,
+            name: record.name,
+            desc: record.desc,
+          };
+          await updateProject(form as API.INewOrUpdateProject);
+        },
+        onChange: () => {
+          actionRef.current?.reload();
+          return Promise.resolve();
+        },
       }}
       columnsState={{
         persistenceKey: 'pro-table-singe-demos',

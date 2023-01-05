@@ -41,7 +41,7 @@ export default [
     routes: [
       {
         path: '/project/table',
-        name: 'projects',
+        name: 'proOpt',
         component: '@/pages/Project',
       },
       {
